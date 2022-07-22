@@ -43,11 +43,14 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{8befe6a5-8265-4661-a64a-31b12c04a98c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{6b948db5-e989-42ff-9204-90b6a863a9ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TileMap">
+      <UniqueIdentifier>{911e82e1-c07b-4283-8069-5ae5d17aada7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\base.h">
-      <Filter>BaseGame</Filter>
-    </ClInclude>
     <ClInclude Include="src\entity2D.h">
       <Filter>Entity</Filter>
     </ClInclude>
@@ -59,9 +62,6 @@
     </ClInclude>
     <ClInclude Include="src\shader.h">
       <Filter>Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\shape.h">
       <Filter>Shape</Filter>
@@ -85,6 +85,27 @@
       <Filter>Sprite</Filter>
     </ClInclude>
     <ClInclude Include="src\time_manager.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\collision_manager.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\base.h">
+      <Filter>BaseGame</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tile.h">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tilemap.h">
+      <Filter>TileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\xml_lib\tinyxml2.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
@@ -124,6 +145,24 @@
     </ClCompile>
     <ClCompile Include="src\time_manager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\collision_manager.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tile.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tilemap.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xml_lib\tinyxml2.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xml_lib\xmltest.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

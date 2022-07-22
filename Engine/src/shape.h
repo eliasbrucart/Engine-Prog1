@@ -20,7 +20,7 @@ namespace Engine {
 		float _triVertices[18] = {
 			-0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f,
 			 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f,
-			 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+			 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
 		};
 
 		unsigned int _triIndices[3] = {
@@ -43,8 +43,8 @@ namespace Engine {
 
 		void GenerateVAO();
 		void BindVAO();
-		void BindVBO(float* vertices, int AmmountOfVertices);
-		void BindEBO(unsigned int* indices, int AmmountOfIndices);
+		void BindVBO(float* vertices, int verticesAmmount);
+		void BindEBO(unsigned int* indices, int indicesAmmount);
 		void UnbindBuffers();
 		void DeleteBuffer();
 	public:

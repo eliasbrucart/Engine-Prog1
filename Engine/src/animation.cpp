@@ -88,7 +88,7 @@ void Engine::Animation::SetAnimation(int index) {
 	_firstIndex = animation[_currentAnimation]._beginIndex;
 	_lastIndex = animation[_currentAnimation]._endIndex;
 	if(animationSpeed != animation[_currentAnimation].animationSpeed)
-	animationSpeed = animation[_currentAnimation].animationSpeed;
+		animationSpeed = animation[_currentAnimation].animationSpeed;
 
 	if (_currentIndex < _firstIndex || _currentIndex > _lastIndex)
 		_actualCurrentIndex = _firstIndex;

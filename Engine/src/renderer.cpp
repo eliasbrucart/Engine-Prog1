@@ -12,7 +12,6 @@ Renderer::Renderer() {
 }
 
 Renderer::~Renderer() {
-
 }
 
 bool Renderer::InitializeGlew() {
@@ -51,6 +50,11 @@ void Renderer::BindEBO(unsigned int& ebo, unsigned int* indices, int indicesAmmo
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * indicesAmmount, indices, GL_STATIC_DRAW);
 }
+void Engine::Renderer::UpdateBuffers(unsigned int& vbo, float* vertices, int verticesAmmount)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * verticesAmmount, vertices, GL_STATIC_DRAW);
+}
 void Renderer::UnbindBuffers() {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -78,18 +82,18 @@ void Renderer::SetTexAttribPointer(unsigned int shaderID) {
 	CreateAtribPointers(texAttrib, 2, 8, 6);
 }
 
-void Renderer::Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount){
+void Renderer::Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount){
 	BindVAO(vao);
-	BindVBO(vbo, vertices, verticesAmount);
+	UpdateBuffers(vbo, vertices, verticesAmount);
 	shader.SetVertexAttributes("position",6); //especificamos como leer los datos del vertice y se lo pasamos al shader
 	shader.SetColorAttributes("color",6);
 	shader.Use(model);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	UnbindBuffers();
 }
-void Renderer::DrawSprite(Shader& shader, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmmount, glm::mat4 model) {
+void Renderer::DrawSprite(Shader& shader, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, glm::mat4 model) {
 	BindVAO(vao);
-	BindVBO(vbo, vertices, verticesAmmount);
+	UpdateBuffers(vbo,vertices, verticesAmount);
 	SetTexAttribPointer(shader.GetID());
 	shader.Use(model);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -102,6 +106,7 @@ void Renderer::DrawCamera(Shader& shader, glm::mat4 model, glm::mat4 view) {
 
 	unsigned int transformLoc = glGetUniformLocation(shader.GetID(), "model");
 	unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
+
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));

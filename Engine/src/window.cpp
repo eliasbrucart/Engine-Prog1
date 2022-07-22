@@ -23,7 +23,7 @@ Window::Window(int width, int height) {
 }
 
 Window::~Window() {
-
+	
 }
 
 int Window::CreateWindow(const char* name) {

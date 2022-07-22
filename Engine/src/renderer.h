@@ -20,12 +20,13 @@ namespace Engine {
 		void BindVAO(unsigned int& vao);
 		void BindVBO(unsigned int& vbo, float* vertices, int verticesAmmount);
 		void BindEBO(unsigned int& ebo, unsigned int* indices, int indicesAmmount);
+		void UpdateBuffers(unsigned int& vbo, float* vertices, int verticesAmmount);
 		void UnbindBuffers();
 		void DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo);
 		void CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition);
 		void SetTexAttribPointer(unsigned int shaderID);
-		void Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount);
-		void DrawSprite(Shader &shader, unsigned int &vao, unsigned int &vbo, float* vertices, int verticesAmount, glm::mat4 model);
+		void Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount);
+		void DrawSprite(Shader &shader, unsigned int &vao, unsigned int &vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, glm::mat4 model);
 		void DrawCamera(Shader& shader, glm::mat4 model, glm::mat4 view);
 	};
 }

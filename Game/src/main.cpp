@@ -1,14 +1,13 @@
 #include<iostream>
 #include"Game.h"
+
 using namespace std;
 
 int main() {
 	Game* game = new Game();
 	if (game)
 	{
-		game->Init();
-		game->Update();
-		game->Unload();
+		game->Execute();
 		delete game;
 		game = NULL;
 	}

@@ -5,6 +5,16 @@
 #include "time_manager.h"
 
 namespace Engine {
+	Sprite::Sprite() {
+		_transparency = true;
+		_renderer = NULL;
+		_texImporter = new TextureImporter();
+
+		uv[0].u = 1; uv[0].v = 1;
+		uv[1].u = 1; uv[1].v = 0;
+		uv[2].u = 0; uv[2].v = 0;
+		uv[3].u = 0; uv[3].v = 1;
+	}
 	Sprite::Sprite(bool transparency, Renderer* renderer, Shader shader) : Entity2D() {
 		_transparency = transparency;
 		_renderer = renderer;
@@ -45,12 +55,12 @@ namespace Engine {
 		_renderer->BindVAO(_vao);
 	}
 
-	void Sprite::BindVBO(float* vertices, int AmmountOfVertices) {
-		_renderer->BindVBO(_vbo, vertices, AmmountOfVertices);
+	void Sprite::BindVBO() {
+		_renderer->BindVBO(_vbo, _vertices, 32);
 	}
 
-	void Sprite::BindEBO(unsigned int* indices, int AmmountOfVertices) {
-		_renderer->BindEBO(_ebo, indices, AmmountOfVertices);
+	void Sprite::BindEBO() {
+		_renderer->BindEBO(_ebo, _quadIndices, 6);
 	}
 
 	void Sprite::Init() {
@@ -59,24 +69,26 @@ namespace Engine {
 		BindBuffers();
 	}
 
+	void Sprite::Init(unsigned int texture) {
+		_texture = texture;
+		_renderer->SetTexAttribPointer(shader.GetID());
+		BindBuffers();
+	}
+
 	void Sprite::LoadSprite() {
-		if (_texImporter)
+		if (_texImporter) {
 			_texImporter->LoadImage(_width, _height, _transparency);
+			_texture = _texImporter->GetTexture();
+		}
 		else
 			std::cout << "Couldn't find image" << std::endl;
 	}
 
-	void Sprite::LoadSprite(int width, int height) {
-		if (_texImporter)
-			_texImporter->LoadImage(width, height, _transparency);
-		else
-			std::cout << "Couldn't find image" << std::endl;
-	}
 
-	void Sprite::LoadSprite(int width, int height, const char* path) {
+	void Sprite::LoadSprite(const char* path) {
 		if (_texImporter) {
 			_texImporter->SetPath(path);
-			_texImporter->LoadImage(width, height, _transparency);
+			_texImporter->LoadImage(_width, _height, _transparency);
 		}
 		else
 			std::cout << "Couldn't find image" << std::endl;
@@ -85,8 +97,8 @@ namespace Engine {
 	void Sprite::BindBuffers() {
 		GenerateVAO();
 		BindVAO();
-		BindVBO(_vertices, 32);
-		BindEBO(_quadIndices, 6);
+		BindVBO();
+		BindEBO();
 	}
 
 	void Sprite::BindTexture() {
@@ -103,18 +115,18 @@ namespace Engine {
 		glDisable(GL_BLEND);
 	}
 
-	void Sprite::Color(float r, float g, float b){
+	void Sprite::Color(float r, float g, float b) {
 		_vertices[3] = r;  _vertices[4] = g;  _vertices[5] = b;
 		_vertices[11] = r; _vertices[12] = g; _vertices[13] = b;
 		_vertices[19] = r; _vertices[20] = g; _vertices[21] = b;
 		_vertices[27] = r; _vertices[28] = g; _vertices[29] = b;
 	}
 
-	void Sprite::Color(glm::vec3 color){
-		   _vertices[3] = color.x;  _vertices[4] = color.y;  _vertices[5] = color.z;
-		  _vertices[11] = color.x; _vertices[12] = color.y; _vertices[13] = color.z;
-		  _vertices[19] = color.x; _vertices[20] = color.y; _vertices[21] = color.z;
-		  _vertices[27] = color.x; _vertices[28] = color.y; _vertices[29] = color.z;
+	void Sprite::Color(glm::vec3 color) {
+		_vertices[3] = color.x;  _vertices[4] = color.y;  _vertices[5] = color.z;
+		_vertices[11] = color.x; _vertices[12] = color.y; _vertices[13] = color.z;
+		_vertices[19] = color.x; _vertices[20] = color.y; _vertices[21] = color.z;
+		_vertices[27] = color.x; _vertices[28] = color.y; _vertices[29] = color.z;
 	}
 
 	void Sprite::SetUVs(glm::vec4 uvRect) {
@@ -130,6 +142,16 @@ namespace Engine {
 		UpdateUVs();
 	}
 
+	void Sprite::SetUVs(float sheetHeight, float sheetWidth, float spriteHeight, float spriteWidth, int x, int y) {
+		uv[0].u = ((x +1) * spriteWidth) / sheetWidth; uv[0].v = ((y + 1) * spriteHeight) / sheetHeight;    // top right
+		uv[1].u = ((x +1) * spriteWidth) / sheetWidth; uv[1].v = (y * spriteHeight) / sheetHeight;				 // bottom right
+		uv[2].u = (x * spriteWidth) / sheetWidth;      uv[2].v = (y * spriteHeight) / sheetHeight;							// bottom left
+		uv[3].u = (x * spriteWidth) / sheetWidth;      uv[3].v = ((y + 1) * spriteHeight) / sheetHeight;				// top left
+
+		UpdateUVs();
+	}
+
+
 	void Sprite::UpdateUVs(){
 		 _vertices[6] = uv[0].u;  _vertices[7] = uv[0].v;   // top Right
 		_vertices[14] = uv[1].u; _vertices[15] = uv[1].v;   // bottom Right
@@ -142,13 +164,30 @@ namespace Engine {
 		if (_transparency) {
 			BlendSprite();
 			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, GetModel());
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
 			UnBlendSprite();
 			glDisable(GL_TEXTURE_2D);
 		}
 		else {
 			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, GetModel());
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+			glDisable(GL_TEXTURE_2D);
+		}
+	}
+
+	void Sprite::DrawFromUVs(glm::vec4 uv) {
+		UpdateMatrices();
+		SetUVs(uv);
+		if (_transparency) {
+			BlendSprite();
+			BindTexture();
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+			UnBlendSprite();
+			glDisable(GL_TEXTURE_2D);
+		}
+		else {
+			BindTexture();
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
@@ -159,13 +198,13 @@ namespace Engine {
 		if (_transparency) {
 			BlendSprite();
 			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, GetModel());
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
 			UnBlendSprite();
 			glDisable(GL_TEXTURE_2D);
 		}
 		else {
 			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, GetModel());
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
@@ -186,6 +225,18 @@ namespace Engine {
 		return _height;
 	}
 
+	void Sprite::SetRenderer(Renderer* renderer){
+		_renderer = renderer;
+	}
+
+	void Sprite::SetShader(Shader shader){
+		this->shader = shader;
+	}
+
+	Renderer* Sprite::GetRenderer(){
+		return _renderer;
+	}
+
 	void Sprite::SetPath(const char* path) {
 		if (_texImporter)
 			_texImporter->SetPath(path);
@@ -198,6 +249,10 @@ namespace Engine {
 			return _texImporter->GetPath();
 		else
 			return nullptr;
+	}
+
+	void Sprite::SetTransparency(bool value){
+		_transparency = value;
 	}
 
 	void Sprite::UnbindBuffers() {

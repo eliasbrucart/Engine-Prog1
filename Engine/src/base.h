@@ -11,6 +11,10 @@
 #include "input.h"
 #include "animation.h"
 #include "time_manager.h"
+#include "collision_manager.h"
+#include "tile.h"
+#include "tilemap.h"
+#include "xml_lib/tinyxml2.h"
 
 namespace Engine {
 	class ENGINE_API Base {
@@ -23,16 +27,18 @@ namespace Engine {
 		Shader textureShader;
 		Renderer* GetRenderer();
 		Window* GetWindow();
+		CollisionManager* collisionmanager;
 
 		Time time;
 		Input input;
+		int Init();
+		void Update();
+		void Unload();
 	public:
 		Base();
 		~Base();
 
-		int Init();
-		void Update();
-		void Unload();
+		void Execute();
 
 		virtual void InitGame() = 0;
 		virtual void UpdateGame() = 0;

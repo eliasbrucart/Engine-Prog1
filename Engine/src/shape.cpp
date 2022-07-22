@@ -31,12 +31,12 @@ void Shape::BindVAO() {
 	_renderer->BindVAO(_vao);
 }
 
-void Shape::BindVBO(float* vertices, int AmmountOfVertices) {
-	_renderer->BindVBO(_vbo, vertices, AmmountOfVertices);
+void Shape::BindVBO(float* vertices, int verticesAmmount) {
+	_renderer->BindVBO(_vbo, vertices, verticesAmmount);
 }
 
-void Shape::BindEBO(unsigned int* indices, int AmmountOfIndices) {
-	_renderer->BindEBO(_ebo, indices, AmmountOfIndices);
+void Shape::BindEBO(unsigned int* indices, int indicesAmmount) {
+	_renderer->BindEBO(_ebo, indices, indicesAmmount);
 }
 
 void Shape::Init() {
@@ -45,8 +45,8 @@ void Shape::Init() {
 	switch (_type)
 	{
 	case Engine::Type::triangle:
-		BindVBO(_triVertices, 18);
-		BindEBO(_triIndices, 3);
+		BindVBO(_triVertices,18);
+		BindEBO(_triIndices,3);
 		break;
 	case Engine::Type::quad:
 		BindVBO(_quadVertices, 24);
@@ -100,10 +100,10 @@ void Shape::Draw() {
 	switch (_type)
 	{
 	case Engine::Type::triangle:
-		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _triVertices, 18);
+		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _triVertices, 18, _triIndices, 3);
 		break;
 	case Engine::Type::quad:
-		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _quadVertices, 24);
+		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _quadVertices, 24, _quadIndices, 6);
 		break;
 	}
 }
