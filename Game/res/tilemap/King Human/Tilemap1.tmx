@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.1" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" source="Terrain.tsx"/>
+ <layer id="1" name="Terrain" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzTZGBg0BzFo3gUj+JRPIpH8SgexVTDAFR9YBk=
+  </data>
+ </layer>
+ <layer id="2" name="Walls" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJwTZWBgEKMzFgdiDQb6A61Re0ftHbV31N5Re0ftHbV3RNlrDcQ2dMa2QAwAX4wPYQ==
+  </data>
+ </layer>
+ <layer id="3" name="InGame Terrain" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBieIHXUXqqbg01uONiLy/yh4t9UEjG17CUFIJsjDcQyA2CvHhDrE2EvNewmNZypBciNe1LMHwgwEu2lJC/T2m0jyV5KAAD+rRlw
+  </data>
+ </layer>
+</map>
