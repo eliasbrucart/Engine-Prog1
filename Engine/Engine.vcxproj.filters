@@ -93,12 +93,6 @@
     <ClInclude Include="src\base.h">
       <Filter>BaseGame</Filter>
     </ClInclude>
-    <ClInclude Include="src\tile.h">
-      <Filter>TileMap</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tilemap.h">
-      <Filter>TileMap</Filter>
-    </ClInclude>
     <ClInclude Include="src\xml_lib\tinyxml2.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -107,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="src\utils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tile.h">
+      <Filter>TileMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,12 +146,6 @@
     <ClCompile Include="src\collision_manager.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
-    <ClCompile Include="src\tile.cpp">
-      <Filter>TileMap</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tilemap.cpp">
-      <Filter>TileMap</Filter>
-    </ClCompile>
     <ClCompile Include="src\xml_lib\tinyxml2.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -163,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="src\utils.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tile.cpp">
+      <Filter>TileMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

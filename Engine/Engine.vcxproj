@@ -33,7 +33,6 @@
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\texture_importer.h" />
     <ClInclude Include="src\tile.h" />
-    <ClInclude Include="src\tilemap.h" />
     <ClInclude Include="src\time_manager.h" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\window.h" />
@@ -52,7 +51,6 @@
     <ClCompile Include="src\sprite.cpp" />
     <ClCompile Include="src\texture_importer.cpp" />
     <ClCompile Include="src\tile.cpp" />
-    <ClCompile Include="src\tilemap.cpp" />
     <ClCompile Include="src\time_manager.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\window.cpp" />

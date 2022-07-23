@@ -16,6 +16,11 @@ Game::~Game() {
 		player = NULL;
 	}
 
+	if (_tile != NULL) {
+		delete _tile;
+		_tile = NULL;
+	}
+
 	//if (map != NULL) {
 	//	delete map;
 	//	map = NULL;
@@ -25,6 +30,10 @@ void Game::InitGame() {
 
 	_sprite = new Engine::Sprite(true, "res/textures/samurai.png", GetRenderer(), textureShader);
 	player = new Animation();
+
+	_tile = new Tile();
+
+	_tile->TestXMLLoad("res/doc.xml");
 
 	//map = new Tilemap(glm::vec2(10, 10), textureShader, "res/textures/Dungeon_Tileset.png", GetRenderer());
 	//map->LoadMap("res/tilemap/Map2.tmx");
@@ -94,6 +103,11 @@ void Game::UnloadGame() {
 	if (player != NULL) {
 		delete player;
 		player = NULL;
+	}
+
+	if (_tile != NULL) {
+		delete _tile;
+		_tile = NULL;
 	}
 
 	//if (map != NULL) {

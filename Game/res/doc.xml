@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blog>
+   <article>
+     <title>How to parser XML with TinyXML2 C++</title>
+     <description>A simple and functional tool to read the tilemaps of your games.</description>
+     <date>2022-03-04</date>
+     <time>13:40</time>
+     <tag>c++</tag>
+   </article>
+   <article>
+     <title>Learn the details of Indentation Styles</title>
+     <description>The indentation style is not required in most programming languages.</description>
+     <date>2022-02-13</date>
+     <time>08:27</time>
+     <tag>code</tag>
+   </article>
+</blog>
