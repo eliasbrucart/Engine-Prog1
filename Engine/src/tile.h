@@ -1,6 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 #include "export.h"
+#include "renderer.h"
 
 namespace Engine {
 	class ENGINE_API Tile {
@@ -9,9 +10,10 @@ namespace Engine {
 		bool _isWalkable;
 		int _width;
 		int _height;
+		Renderer* _renderer;
 	public:
 		Tile();
-		Tile(unsigned int id, bool isWalkable, int width, int height);
+		Tile(unsigned int id, bool isWalkable, int width, int height, Renderer* renderer);
 		~Tile();
 		void TestXMLLoad(const char* path);
 		void SetWidth(int width);
@@ -20,6 +22,7 @@ namespace Engine {
 		int GetWidth();
 		int GetHeight();
 		bool GetIsWalkable();
+		void Draw();
 	};
 }
 

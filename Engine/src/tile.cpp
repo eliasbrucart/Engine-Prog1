@@ -14,11 +14,12 @@ Tile::Tile() {
 	_height = 0;
 }
 
-Tile::Tile(unsigned int id, bool isWalkable, int width, int height) {
+Tile::Tile(unsigned int id, bool isWalkable, int width, int height, Renderer* renderer) {
 	_id = id;
 	_isWalkable = isWalkable;
 	_width = width;
 	_height = height;
+	_renderer = renderer;
 }
 
 Tile::~Tile() {
@@ -68,4 +69,8 @@ int Tile::GetHeight() {
 
 bool Tile::GetIsWalkable() {
 	return _isWalkable;
+}
+
+void Tile::Draw() {
+	//_renderer->DrawSprite();
 }
