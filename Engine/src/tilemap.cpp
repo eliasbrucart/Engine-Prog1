@@ -1,5 +1,7 @@
 #include "tilemap.h"
+#include "xml_lib/tinyxml2.h"
 
+using namespace tinyxml2;
 using namespace Engine;
 
 Tilemap::Tilemap(glm::ivec2 dimension, const char* imagePath, Shader shader, Renderer* renderer) {
@@ -29,6 +31,12 @@ void Tilemap::SetImagePath(const char* path) {
 
 void Tilemap::LoadMap(const char* path) {
 	//Aca hacemos las carga del mapa a travez de tinyxml
+	tinyxml2::XMLDocument doc;
+
+	doc.LoadFile(path);
+
+	//Creamos los punteros para obtener los elementos del archivo xml
+	tinyxml2::XMLElement* p_root_element = doc.RootElement();
 }
 
 void Tilemap::Draw() {

@@ -14,11 +14,13 @@
 namespace Engine {
 	class ENGINE_API Tilemap {
 	private:
+		std::vector<Tile*> _tiles;
+		std::vector<int> _grid;
 		glm::ivec2 _mapDims;
 		Shader _shader;
-		Renderer* _renderer;
-		TextureImporter* _textureImporter;
-		CollisionManager* _collisionManager;
+		Renderer* _renderer = nullptr;
+		TextureImporter* _textureImporter = nullptr;
+		CollisionManager* _collisionManager = nullptr;
 		const char* _imagePath;
 		Tile* _actualTile = nullptr;
 

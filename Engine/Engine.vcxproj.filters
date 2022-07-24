@@ -105,6 +105,9 @@
     <ClInclude Include="src\tile.h">
       <Filter>TileMap</Filter>
     </ClInclude>
+    <ClInclude Include="src\tilemap.h">
+      <Filter>TileMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\base.cpp">
@@ -156,6 +159,9 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\tile.cpp">
+      <Filter>TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tilemap.cpp">
       <Filter>TileMap</Filter>
     </ClCompile>
   </ItemGroup>
