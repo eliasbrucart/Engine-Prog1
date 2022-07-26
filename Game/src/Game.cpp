@@ -21,10 +21,10 @@ Game::~Game() {
 		_tile = NULL;
 	}
 
-	//if (map != NULL) {
-	//	delete map;
-	//	map = NULL;
-	//}
+	if (map != NULL) {
+		delete map;
+		map = NULL;
+	}
 }
 void Game::InitGame() {
 
@@ -35,8 +35,8 @@ void Game::InitGame() {
 
 	_tile->TestXMLLoad("res/doc.xml");
 
-	//map = new Tilemap(glm::vec2(10, 10), textureShader, "res/textures/Dungeon_Tileset.png", GetRenderer());
-	//map->LoadMap("res/tilemap/Map2.tmx");
+	map = new Tilemap(glm::ivec2(10,10), "res/textures/Terrain.png", textureShader, GetRenderer());
+	map->LoadMap("res/tilemap/Map1.tmx");
 
 	_sprite->Init();
 
@@ -84,7 +84,7 @@ void Game::UpdateGame() {
 		player->SetAnimation(2);
 	}
 	
-	//map->Draw();
+	map->Draw();
 	
 	//map->CheckCollisionWithTileMap(_sprite, _sprite->transform.position, speed * time.GetDeltaTime());
 
@@ -110,8 +110,8 @@ void Game::UnloadGame() {
 		_tile = NULL;
 	}
 
-	//if (map != NULL) {
-	//	delete map;
-	//	map = NULL;
-	//}
+	if (map != NULL) {
+		delete map;
+		map = NULL;
+	}
 }

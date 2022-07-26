@@ -14,8 +14,8 @@
 namespace Engine {
 	class ENGINE_API Tilemap {
 	private:
-		std::vector<Tile*> _tiles;
-		std::vector<int> _grid;
+		std::vector<std::vector<std::vector<Tile*>>> _tiles; //primer vector: layer, segundo: filas, tercero: columnas
+		std::vector<std::vector<std::vector<int>>> _grid; //primer vector: layer, segundo: filas, tercero: columnas
 		glm::ivec2 _mapDims;
 		Shader _shader;
 		Renderer* _renderer = nullptr;
@@ -28,12 +28,15 @@ namespace Engine {
 		int _tileHeight;
 		int _mapWidth;
 		int _mapHeight;
+		int _tilesAmount;
 	public:
 		Tilemap();
 		Tilemap(glm::ivec2 dimension, const char* imagePath, Shader shader, Renderer* renderer);
 		~Tilemap();
 		void SetImagePath(const char* path);
 		void LoadMap(const char* path);
+		void LoadMapFromGrid();
+		glm::vec4 GetTileFromID(unsigned int id);
 		void Draw();
 		//Agregar metodo para chequeo de colision
 	};

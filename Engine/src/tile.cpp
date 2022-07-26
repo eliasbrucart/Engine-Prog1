@@ -7,14 +7,19 @@
 using namespace tinyxml2;
 using namespace Engine;
 
-Tile::Tile() {
+Tile::Tile() : Sprite() {
 	_id = 0;
 	_isWalkable = false;
 	_width = 0;
 	_height = 0;
 }
 
-Tile::Tile(unsigned int id, bool isWalkable, int width, int height, Renderer* renderer) {
+Tile::Tile(unsigned int id, bool isWalkable) : Sprite(){
+	_id = id;
+	_isWalkable = isWalkable;
+}
+
+Tile::Tile(unsigned int id, bool isWalkable, int width, int height, Renderer* renderer) : Sprite() {
 	_id = id;
 	_isWalkable = isWalkable;
 	_width = width;
@@ -24,6 +29,10 @@ Tile::Tile(unsigned int id, bool isWalkable, int width, int height, Renderer* re
 
 Tile::~Tile() {
 
+}
+
+void Tile::SetID(unsigned int id) {
+	_id = id;
 }
 
 void Tile::TestXMLLoad(const char* path) {
@@ -55,8 +64,29 @@ void Tile::SetHeight(int height) {
 }
 
 //Metodo para lo ultimo, ver que parametros le pasamos para setear la variable
-void Tile::SetIsWalkable() {
+void Tile::SetIsWalkable(const char* path) {
+	tinyxml2::XMLDocument doc;
 
+	doc.LoadFile(path);
+
+	tinyxml2::XMLElement* tileset = doc.FirstChildElement("tileset");
+	if (tileset) {
+		for (tinyxml2::XMLNode* tile = tileset->FirstChildElement(); tile != NULL; tile = tile->NextSiblingElement()) {
+			if (tile->ToElement() && tile->ToElement()->IntAttribute("id") && tile->ToElement()->IntAttribute("id") == _id) {
+				tinyxml2::XMLElement* properties = tile->FirstChildElement("properties");
+				if (properties != NULL) {
+					tinyxml2::XMLElement* propertyElement = properties->FirstChildElement("property");
+					if (propertyElement != NULL)
+						_isWalkable = propertyElement->BoolAttribute("value");
+				}
+			}
+		}
+	}
+	doc.Clear();
+}
+
+unsigned int Tile::GetID() {
+	return _id;
 }
 
 int Tile::GetWidth() {
