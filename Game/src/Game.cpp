@@ -35,7 +35,7 @@ void Game::InitGame() {
 
 	_tile->TestXMLLoad("res/doc.xml");
 
-	map = new Tilemap(glm::ivec2(10,10), "res/textures/Terrain.png", textureShader, GetRenderer());
+	map = new Tilemap(glm::ivec2(16,16), "res/textures/FD_Free_Tiles.png", textureShader, GetRenderer());
 	map->LoadMap("res/tilemap/Map1.tmx");
 
 	_sprite->Init();

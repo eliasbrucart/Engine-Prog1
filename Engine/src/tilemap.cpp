@@ -143,8 +143,9 @@ void Tilemap::LoadMapFromGrid() {
 				newTile->Init();
 				newTile->Translate(xPos, yPos, z);
 				newTile->Scale(_tileWidth, _tileHeight, 1);
+				newTile->SetUVs(GetTileFromID(newTile->GetID()));
 
-				std::cout << "size del vector _tiles" << _tiles[l][x].size() << std::endl;
+				//std::cout << "size del vector _tiles" << _tiles[l][x].size() << std::endl;
 				
 				if (newTile->GetID() <= 0 && l > 0) {
 					delete newTile;
@@ -155,7 +156,7 @@ void Tilemap::LoadMapFromGrid() {
 					if (newTile->GetID() > 0 && l > 0) {
 						newTile->SetID(newTile->GetID() - actualID);
 					}
-					newTile->SetIsWalkable("res/tilemap/Terrain.tsx"); //Por el momento no hace nada
+					newTile->SetIsWalkable("res/tilemap/Tiles.tsx"); //Por el momento no hace nada
 					newTile->SetUVs(GetTileFromID(newTile->GetID()));
 					_tiles[l][y][x] = newTile;
 					xPos += newTile->transform.scale.x + _tileWidth;
@@ -165,8 +166,8 @@ void Tilemap::LoadMapFromGrid() {
 			z += 0.001f;
 			yPos -= _tileHeight + _tileHeight;
 			xPos = _tileWidth;
+			actualID = 1;
 		}
-		actualID = 1;
 	}
 	std::cout << "Cantidad de layers: " << _tiles.size() << endl;
 }
@@ -175,6 +176,9 @@ glm::vec4 Tilemap::GetTileFromID(unsigned int id) {
 	int xTile = id % _mapDims.x; // se hace para que cuando el indice sea mayor a la dimension en x, vuelva a ser 0, es decir, se "reinicia" el ciclo en x
 	int yTile = id / _mapDims.x;
 	yTile = _mapHeight - yTile - 1;
+	std::cout << "xTile: " << xTile << std::endl;
+	std::cout << "yTile: " << yTile << std::endl;
+
 	//                      x  y   w   h
 	glm::vec4 uv = glm::vec4(0, 0, 0, 0);
 
