@@ -35,6 +35,7 @@ void Game::InitGame() {
 
 	_tile->TestXMLLoad("res/doc.xml");
 
+	//Se necesita pasar bien las dimensiones del tileset para que se hagan los seteos de uv correctamente
 	map = new Tilemap(glm::ivec2(16,16), "res/textures/FD_Free_Tiles.png", textureShader, GetRenderer());
 	map->LoadMap("res/tilemap/Map1.tmx");
 
