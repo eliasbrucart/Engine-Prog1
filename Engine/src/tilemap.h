@@ -29,6 +29,8 @@ namespace Engine {
 		int _mapWidth;
 		int _mapHeight;
 		int _tilesAmount;
+
+		//Tile* GetTileFromPos(int posX, int posY);
 	public:
 		Tilemap();
 		Tilemap(glm::ivec2 dimension, const char* imagePath, Shader shader, Renderer* renderer);
@@ -38,7 +40,7 @@ namespace Engine {
 		void LoadMapFromGrid();
 		glm::vec4 GetTileFromID(unsigned int id);
 		void Draw();
-		//Agregar metodo para chequeo de colision
+		void CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPosition, float speed);
 	};
 }
 

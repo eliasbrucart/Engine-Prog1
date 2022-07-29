@@ -87,7 +87,7 @@ void Game::UpdateGame() {
 	
 	map->Draw();
 	
-	//map->CheckCollisionWithTileMap(_sprite, _sprite->transform.position, speed * time.GetDeltaTime());
+	map->CheckCollisionWithTileMap(_sprite, _sprite->transform.position, speed * time.GetDeltaTime());
 
 	player->UpdateIndex(time);
 

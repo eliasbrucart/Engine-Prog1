@@ -190,14 +190,70 @@ glm::vec4 Tilemap::GetTileFromID(unsigned int id) {
 	return uv;
 }
 
+//Tile* Tilemap::GetTileFromPos(int posX, int posY) {
+//	//hacer
+//}
+
 void Tilemap::Draw() {
 	//Llamamos al draw de la clase tile para dibujar cada uno de los tiles
 	if (!_tiles.empty()) {
 		for (int i = 0; i < _tiles.size(); i++) { //layer
 			for (int j = 0; j < _tiles[i].size(); j++) { //layer filas
 				for (int k = 0; k < _tiles[i][j].size(); k++) { //layer columnas
-					if (_tiles[i][j][k])
+					if (_tiles[i][j][k]) {
 						_tiles[i][j][k]->DrawSprite();
+						//std::cout << "tile: " << _tiles[i][j][k]->GetID() << " isWalkable " << _tiles[i][j][k]->GetIsWalkable() << std::endl;
+					}
+				}
+			}
+		}
+	}
+}
+
+void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPosition, float speed) {
+	//creamos un current tile para poder chequear la posicion del mismo con la del player.
+	//Si es la misma entonces obtenemos los tiles alrededor del player con el currentTile
+	//Para poder hacer el chequeo de colision con los tiles que estan cerca al player
+
+	//Ya tenemos en variables la posicion del jugador
+	int playerX = static_cast<int>(entity->transform.position.x) + (_mapWidth / 2) * _tileWidth;
+	int playerY = static_cast<int>(entity->transform.position.y) - (_mapHeight / 2) * _tileHeight;
+
+	//Le pasamos la posicion del jugador al metodo que nos retorna el tile en el que esta parado
+	//Tile* currentTile = GetTileFromPos(playerX, playerY);
+
+	int leftTile = playerX / _tileWidth;
+	int rightTile = playerX + entity->transform.scale.x / _tileWidth;
+	int topTile = (playerY / _tileHeight);
+	int downTile = ((playerY - entity->transform.scale.y) / _tileHeight);
+
+	if (leftTile < 0)
+		leftTile = 0;
+	if (rightTile > _mapWidth)
+		rightTile = _mapWidth;
+	if (topTile < 0)
+		topTile = 0;
+	if (downTile > _mapHeight)
+		downTile = _mapHeight;
+
+	//std::cout << "leftTile: " << leftTile << std::endl;
+	//std::cout << "rightTile: " << rightTile << std::endl;
+	std::cout << "topTile: " << topTile << std::endl;
+	std::cout << "downTile: " << downTile << std::endl;
+
+	for (int l = 0; l < _grid.size(); l++) {
+		//std::cout << "grid size: " << _grid.size() << std::endl;
+		for (int i = leftTile; i <= rightTile; i++) {
+			//std::cout << "i: " << i << std::endl;
+			for (int j = topTile; j <= downTile; j++) {
+				Tile* t = new Tile(_grid[l][i][j], true);
+				std::cout << "tile t id: " << t->GetID() << std::endl;
+				if (t->GetIsWalkable() && _collisionManager->CheckTrigger(entity, t)) {
+					std::cout << "ta colisionando con el tile: " << t->GetID() << std::endl;
+				}
+				if (t) {
+					delete t;
+					t = NULL;
 				}
 			}
 		}
