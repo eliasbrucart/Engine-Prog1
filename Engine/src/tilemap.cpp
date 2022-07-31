@@ -68,12 +68,15 @@ void Tilemap::LoadMap(const char* path) {
 		std::cout << "Error loading tilemap" << std::endl;
 		return;
 	}
-	
+
 	//Almacenamos el ancho y alto del mapa como el ancho y alto de cada tile
 	int width = p_root_element->IntAttribute("width");
 	int height = p_root_element->IntAttribute("height");
 	_tileWidth = p_root_element->IntAttribute("tilewidth");
 	_tileHeight = p_root_element->IntAttribute("tileheight");
+
+	_layerDims.x = width;
+	_layerDims.y = height;
 
 	int layerCount = 0;
 	std::vector<tinyxml2::XMLElement*> layerElement;
@@ -84,7 +87,7 @@ void Tilemap::LoadMap(const char* path) {
 			layerCount++;
 			layerElement.push_back(childElement);
 		}
-	
+
 	}
 	std::cout << "cantidad de layers cargados desde archivo: " << layerCount << std::endl;
 	_grid.resize(layerCount);
@@ -135,7 +138,7 @@ void Tilemap::LoadMapFromGrid() {
 		_tiles[l].resize(_grid[l].size());
 		for (int y = 0; y < _grid[l].size(); y++) {
 			_tiles[l][y].resize(_grid[l][y].size());
-			for(int x = 0; x < _grid[l][y].size(); x++){
+			for (int x = 0; x < _grid[l][y].size(); x++) {
 				Tile* newTile = new Tile(_grid[l][y][x], false, _tileWidth, _tileHeight, _renderer);
 				newTile->SetRenderer(_renderer);
 				newTile->SetShader(_shader);
@@ -146,7 +149,7 @@ void Tilemap::LoadMapFromGrid() {
 				newTile->SetUVs(GetTileFromID(newTile->GetID()));
 
 				//std::cout << "size del vector _tiles" << _tiles[l][x].size() << std::endl;
-				
+
 				if (newTile->GetID() <= 0 && l > 0) {
 					delete newTile;
 					newTile = NULL;
@@ -156,7 +159,7 @@ void Tilemap::LoadMapFromGrid() {
 					if (newTile->GetID() > 0 && l > 0) {
 						newTile->SetID(newTile->GetID() - actualID);
 					}
-					newTile->SetIsWalkable("res/tilemap/Tiles.tsx"); //Por el momento no hace nada
+					newTile->SetIsWalkable("res/tilemap/Tiles.tsx");
 					newTile->SetUVs(GetTileFromID(newTile->GetID()));
 					_tiles[l][y][x] = newTile;
 					xPos += newTile->transform.scale.x + _tileWidth;
@@ -211,49 +214,44 @@ void Tilemap::Draw() {
 }
 
 void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPosition, float speed) {
-	//creamos un current tile para poder chequear la posicion del mismo con la del player.
-	//Si es la misma entonces obtenemos los tiles alrededor del player con el currentTile
-	//Para poder hacer el chequeo de colision con los tiles que estan cerca al player
+	//clculamos la distancia entre la posicion del player con el punto de origen del mapa en X y en Y.
+	float distanceWithTilemapX = glm::distance(glm::vec2(entityPosition.x, 0), glm::vec2(0, 0));
+	float distanceWithTilemapWidth = glm::distance(glm::vec2(entityPosition.x + entity->transform.scale.x * 0.5f, 0), glm::vec2(0, 0));
+	float distanceWithTilemapY = glm::distance(glm::vec2(0, entityPosition.y), glm::vec2(0, 700));
+	float distanceeWithTilemapHeight = glm::distance(glm::vec2(0, entityPosition.y - entity->transform.scale.y * 0.5f), glm::vec2(0, 700));
 
-	//Ya tenemos en variables la posicion del jugador
-	int playerX = static_cast<int>(entity->transform.position.x) + (_mapWidth / 2) * _tileWidth;
-	int playerY = static_cast<int>(entity->transform.position.y) - (_mapHeight / 2) * _tileHeight;
+	//conseguir los indices en base a la distancia obtenida y dividiendo los valores en X y en Y por el ancho y alto de cada tile.
+	float indexInX = distanceWithTilemapX / _tileWidth * 0.5f; //indice para calcular el left tile restando 1
+	float indexInY = distanceWithTilemapY / _tileHeight * 0.5f; //indice para calcular el top tile restando 1
+	float indexInWidth = distanceWithTilemapWidth / _tileWidth * 0.5f;
+	float indexInHeight = distanceeWithTilemapHeight / _tileHeight * 0.5f;
 
-	//Le pasamos la posicion del jugador al metodo que nos retorna el tile en el que esta parado
-	//Tile* currentTile = GetTileFromPos(playerX, playerY);
+	//std::cout << "indexInX: " << indexInX << std::endl;
+	//std::cout << "indexInY: " << indexInY << std::endl;
+	//std::cout << "indexInWidth: " << indexInWidth << std::endl;
+	//std::cout << "indexInHeight: " << indexInHeight << std::endl;
 
-	int leftTile = playerX / _tileWidth;
-	int rightTile = playerX + entity->transform.scale.x / _tileWidth;
-	int topTile = (playerY / _tileHeight);
-	int downTile = ((playerY - entity->transform.scale.y) / _tileHeight);
+	//conseguimos los tiles vecinos en base a los indices obtenidos
+	int rightTile = static_cast<int>(indexInWidth) + 1;
+	int leftTile = static_cast<int>(indexInX) - 1;
+	int topTile = static_cast<int>(indexInY) - 1;
+	int bottomTile = static_cast<int>(indexInHeight) + 1;
 
-	if (leftTile < 0)
-		leftTile = 0;
-	if (rightTile > _mapWidth)
-		rightTile = _mapWidth;
-	if (topTile < 0)
-		topTile = 0;
-	if (downTile > _mapHeight)
-		downTile = _mapHeight;
-
-	//std::cout << "leftTile: " << leftTile << std::endl;
-	//std::cout << "rightTile: " << rightTile << std::endl;
+	std::cout << "rightTile: " << rightTile << std::endl;
+	std::cout << "leftTile: " << leftTile << std::endl;
 	std::cout << "topTile: " << topTile << std::endl;
-	std::cout << "downTile: " << downTile << std::endl;
+	std::cout << "bottomTile: " << bottomTile << std::endl;
 
-	for (int l = 0; l < _grid.size(); l++) {
-		//std::cout << "grid size: " << _grid.size() << std::endl;
-		for (int i = leftTile; i <= rightTile; i++) {
-			//std::cout << "i: " << i << std::endl;
-			for (int j = topTile; j <= downTile; j++) {
-				Tile* t = new Tile(_grid[l][i][j], true);
-				std::cout << "tile t id: " << t->GetID() << std::endl;
-				if (t->GetIsWalkable() && _collisionManager->CheckTrigger(entity, t)) {
-					std::cout << "ta colisionando con el tile: " << t->GetID() << std::endl;
-				}
-				if (t) {
-					delete t;
-					t = NULL;
+	for (int i = leftTile; i <= rightTile; i++) {
+		for (int j = topTile; j <= bottomTile; j++) {
+			for (int l = 0; l < _grid.size(); l++) {
+									//Le restamos uno ya que en la carga del mapa, el conteo comienza desde 0.
+				if (i >= 0 && i <= _layerDims.x -1 && j >= 0 && j <= _layerDims.y -1 && l >= 0) {
+					Tile* t = _tiles[l][j][i];
+					if (t != NULL && !t->GetIsWalkable()) {
+						_collisionManager->CheckCollision(t, entity, speed);
+						std::cout << "ta colisionando con el tile: " << t->GetID() << std::endl;
+					}
 				}
 			}
 		}

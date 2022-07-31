@@ -17,6 +17,7 @@ namespace Engine {
 		std::vector<std::vector<std::vector<Tile*>>> _tiles; //primer vector: layer, segundo: filas, tercero: columnas
 		std::vector<std::vector<std::vector<int>>> _grid; //primer vector: layer, segundo: filas, tercero: columnas
 		glm::ivec2 _mapDims;
+		glm::ivec2 _layerDims;
 		Shader _shader;
 		Renderer* _renderer = nullptr;
 		TextureImporter* _textureImporter = nullptr;
