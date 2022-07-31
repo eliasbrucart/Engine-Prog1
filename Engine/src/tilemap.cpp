@@ -249,7 +249,7 @@ void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPositi
 				if (i >= 0 && i <= _layerDims.x -1 && j >= 0 && j <= _layerDims.y -1 && l >= 0) {
 					Tile* t = _tiles[l][j][i];
 					if (t != NULL && !t->GetIsWalkable()) {
-						_collisionManager->CheckCollision(t, entity, speed);
+						_collisionManager->CheckCollision(entity, t, speed);
 						std::cout << "ta colisionando con el tile: " << t->GetID() << std::endl;
 					}
 				}
