@@ -123,6 +123,10 @@ void Tilemap::LoadMap(const char* path) {
 	LoadMapFromGrid();
 }
 
+void Tilemap::SetTilesInfo(const char* path) {
+	_tilesInfoPath = path;
+}
+
 void Tilemap::LoadMapFromGrid() {
 	_textureImporter->SetPath(_imagePath);
 	_textureImporter->LoadImage(_mapWidth, _mapHeight, true);
@@ -159,7 +163,7 @@ void Tilemap::LoadMapFromGrid() {
 					if (newTile->GetID() > 0 && l > 0) {
 						newTile->SetID(newTile->GetID() - actualID);
 					}
-					newTile->SetIsWalkable("res/tilemap/Tiles.tsx");
+					newTile->SetIsWalkable(_tilesInfoPath);
 					newTile->SetUVs(GetTileFromID(newTile->GetID()));
 					_tiles[l][y][x] = newTile;
 					xPos += newTile->transform.scale.x + _tileWidth;

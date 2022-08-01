@@ -23,6 +23,7 @@ namespace Engine {
 		TextureImporter* _textureImporter = nullptr;
 		CollisionManager* _collisionManager = nullptr;
 		const char* _imagePath;
+		const char* _tilesInfoPath;
 		Tile* _actualTile = nullptr;
 
 		int _tileWidth;
@@ -38,6 +39,7 @@ namespace Engine {
 		~Tilemap();
 		void SetImagePath(const char* path);
 		void LoadMap(const char* path);
+		void SetTilesInfo(const char* path);
 		void LoadMapFromGrid();
 		glm::vec4 GetTileFromID(unsigned int id);
 		void Draw();
