@@ -21,7 +21,6 @@ namespace Engine {
 		Tile(unsigned int id, bool isWalkable, int width, int height, int posX, int posY, Renderer* renderer);
 		~Tile();
 		void SetID(unsigned int id);
-		void TestXMLLoad(const char* path);
 		void SetWidth(int width);
 		void SetHeight(int height);
 		void SetIsWalkable(const char* path);

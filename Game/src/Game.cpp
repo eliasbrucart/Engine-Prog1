@@ -16,11 +16,6 @@ Game::~Game() {
 		player = NULL;
 	}
 
-	if (_tile != NULL) {
-		delete _tile;
-		_tile = NULL;
-	}
-
 	if (map != NULL) {
 		delete map;
 		map = NULL;
@@ -30,10 +25,6 @@ void Game::InitGame() {
 
 	_sprite = new Engine::Sprite(true, "res/textures/samurai.png", GetRenderer(), textureShader);
 	player = new Animation();
-
-	_tile = new Tile();
-
-	_tile->TestXMLLoad("res/doc.xml");
 
 	//Se necesita pasar bien las dimensiones del tileset para que se hagan los seteos de uv correctamente
 	map = new Tilemap(glm::ivec2(16,16), "res/textures/FD_Free_Tiles.png", textureShader, GetRenderer());
@@ -48,14 +39,14 @@ void Game::InitGame() {
 	player->AddAnimation(0, 6, false, 1.f); //ataque
 	player->AddAnimation(6, 11, false, 1.f); // bloqueo
 	player->AddAnimation(12, 14, true,  .4f); // idle
-	player->SetAnimation(2);
+	player->SetAnimation(2); //setear la animacion con la que comienza el player
 
 
 	_sprite->Scale(50.0f, 50.0f, 1.0f);
 
 	//ahora se pueden mover las cosas estilo unity
 	_sprite->Color(1.0f, 1.0f, 1.0f);
-	_sprite->transform.position = glm::vec3(300,400,1);
+	_sprite->transform.position = glm::vec3(300,300,1);
 }
 void Game::PlayerInputs() {
 	if (input.GetKey(KeyCode::W)) {
@@ -69,6 +60,18 @@ void Game::PlayerInputs() {
 	}
 	else if (input.GetKey(KeyCode::A)) {
 		_sprite->transform.position.x -= speed * time.GetDeltaTime();
+	}
+	else if (input.GetKey(KeyCode::X)) {
+		_sprite->transform.scale.x -= speed * time.GetDeltaTime();
+	}
+	else if (input.GetKey(KeyCode::C)) {
+		_sprite->transform.scale.x += speed * time.GetDeltaTime();
+	}
+	else if (input.GetKey(KeyCode::Y)) {
+		_sprite->transform.scale.y -= speed * time.GetDeltaTime();
+	}
+	else if (input.GetKey(KeyCode::U)) {
+		_sprite->transform.scale.y += speed * time.GetDeltaTime();
 	}
 
 	if (input.GetMouseButton(MouseButtons::LEFT_MOUSE_BUTTON)) {
@@ -105,11 +108,6 @@ void Game::UnloadGame() {
 	if (player != NULL) {
 		delete player;
 		player = NULL;
-	}
-
-	if (_tile != NULL) {
-		delete _tile;
-		_tile = NULL;
 	}
 
 	if (map != NULL) {
