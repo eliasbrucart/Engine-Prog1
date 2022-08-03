@@ -78,6 +78,7 @@ void Tilemap::LoadMap(const char* path) {
 	_layerDims.x = width;
 	_layerDims.y = height;
 
+	//buscamos los layers del mapa
 	int layerCount = 0;
 	std::vector<tinyxml2::XMLElement*> layerElement;
 	for (tinyxml2::XMLElement* childElement = p_root_element->FirstChildElement(); childElement != NULL; childElement = childElement->NextSiblingElement()) {
@@ -90,7 +91,7 @@ void Tilemap::LoadMap(const char* path) {
 
 	}
 	std::cout << "cantidad de layers cargados desde archivo: " << layerCount << std::endl;
-	_grid.resize(layerCount);
+	_grid.resize(layerCount); //resize del vector a numero de layers encontrados
 	for (int l = 0; l < _grid.size(); l++) {
 		tinyxml2::XMLText* dataElement = layerElement[l]->FirstChildElement("data")->FirstChild()->ToText();
 		if (dataElement == NULL) {
@@ -98,9 +99,11 @@ void Tilemap::LoadMap(const char* path) {
 			return;
 		}
 
+		//en el segundo vector que representa a Y lo llenamos con los datos encontrados dentro del hijo data, 
+		//lo mismo para el vector que representa X.
 		std::string mapGrid;
 		mapGrid = dataElement->Value();
-		std::stringstream ss(mapGrid);
+		std::stringstream ss(mapGrid); //creamos un string stream en donde se almaceneran los ids de cada layer
 		_grid[l].resize(height);
 		for (int y = 0; y < height; y++) {
 			_grid[l][y].resize(width);
@@ -111,7 +114,7 @@ void Tilemap::LoadMap(const char* path) {
 					break;
 
 				int val;
-				if (std::stringstream(value) >> val)
+				if (std::stringstream(value) >> val) //string stream usa string buffer para operar con secuencias de caracteres
 					_grid[l][y][x] = val;
 
 				_tilesAmount++;
@@ -128,14 +131,14 @@ void Tilemap::SetTilesInfo(const char* path) {
 }
 
 void Tilemap::LoadMapFromGrid() {
-	_textureImporter->SetPath(_imagePath);
-	_textureImporter->LoadImage(_mapWidth, _mapHeight, true);
+	_textureImporter->SetPath(_imagePath); //importamos el .png que contiene las texturas de los tiles
+	_textureImporter->LoadImage(_mapWidth, _mapHeight, true); //cargamos la respectiva textura
 	int xPos = _tileWidth; //variables necesarias para posicionar cada tile
 	std::cout << "tile width: " << _tileWidth << std::endl;
 	int yPos = 700;
 	float z = 0;
 	int actualID = 0;
-	_tiles.resize(_grid.size());
+	_tiles.resize(_grid.size()); //comenzamos a cargar el mapa
 	for (int l = 0; l < _grid.size(); l++) {
 		xPos = _tileWidth;
 		yPos = 700; //cambiar este hardcodeo feo
@@ -146,7 +149,7 @@ void Tilemap::LoadMapFromGrid() {
 				Tile* newTile = new Tile(_grid[l][y][x], false, _tileWidth, _tileHeight, _renderer);
 				newTile->SetRenderer(_renderer);
 				newTile->SetShader(_shader);
-				newTile->SetPath(_imagePath);
+				newTile->SetPath(_imagePath); //seteamos la imagen para cada tile
 				newTile->Init();
 				newTile->Translate(xPos, yPos, z);
 				newTile->Scale(_tileWidth, _tileHeight, 1);
@@ -154,22 +157,22 @@ void Tilemap::LoadMapFromGrid() {
 
 				//std::cout << "size del vector _tiles" << _tiles[l][x].size() << std::endl;
 
-				if (newTile->GetID() <= 0 && l > 0) {
+				if (newTile->GetID() <= 0 && l > 0) { //si el id es menor a 0 o igual y hay layers, borramos el tile
 					delete newTile;
 					newTile = NULL;
 					xPos += _tileWidth + _tileWidth;
 				}
 				else {
-					if (newTile->GetID() > 0 && l > 0) {
-						newTile->SetID(newTile->GetID() - actualID);
+					if (newTile->GetID() > 0 && l > 0) { //si el id es mayor a 0, es decir hay tile y hay layer, seteamos su id
+						newTile->SetID(newTile->GetID() - actualID); //se resta por actual id por que al haber mas un layer, tiled los incrementa en uno a los id de los tiles
 					}
-					newTile->SetIsWalkable(_tilesInfoPath);
+					newTile->SetIsWalkable(_tilesInfoPath); //seteamos la propiedad is walkable para cada tile
 					newTile->SetUVs(GetTileFromID(newTile->GetID()));
 					_tiles[l][y][x] = newTile;
 					xPos += newTile->transform.scale.x + _tileWidth;
 				}
 			}
-
+			//al terminar el ciclo en Y restamos el acumulador de posicion en y para la siguiente iteracion
 			z += 0.001f;
 			yPos -= _tileHeight + _tileHeight;
 			xPos = _tileWidth;
@@ -202,7 +205,6 @@ glm::vec4 Tilemap::GetTileFromID(unsigned int id) {
 //}
 
 void Tilemap::Draw() {
-	//Llamamos al draw de la clase tile para dibujar cada uno de los tiles
 	if (!_tiles.empty()) {
 		for (int i = 0; i < _tiles.size(); i++) { //layer
 			for (int j = 0; j < _tiles[i].size(); j++) { //layer filas
@@ -225,8 +227,8 @@ void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPositi
 	float distanceeWithTilemapHeight = glm::distance(glm::vec2(0, entityPosition.y - entity->transform.scale.y * 0.5f), glm::vec2(0, 700));
 
 	//conseguir los indices en base a la distancia obtenida y dividiendo los valores en X y en Y por el ancho y alto de cada tile.
-	float indexInX = distanceWithTilemapX / _tileWidth * 0.5f; //indice para calcular el left tile restando 1
-	float indexInY = distanceWithTilemapY / _tileHeight * 0.5f; //indice para calcular el top tile restando 1
+	float indexInX = distanceWithTilemapX / _tileWidth * 0.5f;
+	float indexInY = distanceWithTilemapY / _tileHeight * 0.5f;
 	float indexInWidth = distanceWithTilemapWidth / _tileWidth * 0.5f;
 	float indexInHeight = distanceeWithTilemapHeight / _tileHeight * 0.5f;
 
@@ -246,6 +248,7 @@ void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPositi
 	std::cout << "topTile: " << topTile << std::endl;
 	std::cout << "bottomTile: " << bottomTile << std::endl;
 
+	//recorremos los tiles vecinos, obtenidos previamente y chequeamos la colision solo con los vecinos.
 	for (int i = leftTile; i <= rightTile; i++) {
 		for (int j = topTile; j <= bottomTile; j++) {
 			for (int l = 0; l < _grid.size(); l++) {
@@ -254,7 +257,7 @@ void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPositi
 					Tile* t = _tiles[l][j][i];
 					if (t != NULL && !t->GetIsWalkable()) {
 						_collisionManager->CheckCollision(entity, t, speed);
-						std::cout << "ta colisionando con el tile: " << t->GetID() << std::endl;
+						//std::cout << "ta colisionando con el tile: " << t->GetID() << std::endl;
 					}
 				}
 			}
